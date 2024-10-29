@@ -1,43 +1,31 @@
-// task_2/webpack.config.js
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require("path");
 
 module.exports = {
-    mode: 'production', // Set mode to production
-    entry: './js/dashboard_main.js', // Entry point
-    output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'public'), // Output to public folder
-        clean: true, // Clean the output directory before emit
-    },
-    module: {
-        rules: [
-            {
-                test: /\.css$/, // Regex for CSS files
-                use: [MiniCssExtractPlugin.loader, 'css-loader'], // Use MiniCssExtractPlugin and css-loader
-            },
-            {
-                test: /\.(png|jpg|gif|svg)$/, // Regex for image files
-                type: 'asset/resource', // Use asset/resource for image optimization
-            },
-        ],
-    },
-    plugins: [
-        new MiniCssExtractPlugin({
-            filename: 'main.css', // Output CSS file
-        }),
-        new HtmlWebpackPlugin({
-            template: './public/index.html', // Template HTML file
-            filename: 'index.html', // Output HTML file
-        }),
+  mode: 'production', // Set the mode to production
+  entry: {
+    main: path.resolve(__dirname, './js/dashboard_main.js'), // Entry point for your application
+  },
+  output: {
+    path: path.resolve(__dirname, 'public'), // Output directory for the bundled files
+    filename: 'bundle.js', // Output filename
+    clean: true, // Clean the output directory before each build
+  },
+  performance: {
+    maxAssetSize: 1000000, // Maximum asset size (1 MB)
+    maxEntrypointSize: 1000000, // Maximum entry point size (1 MB)
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i, // Match .css files
+        use: ["style-loader", "css-loader"], // Loaders for CSS
+      },
+      {
+        test: /\.(ico|gif|png|jpg|jpeg|svg)$/i, // Match image files
+        type: 'asset/resource', // Automatically optimize images
+        // No need for file-loader since asset/resource handles it
+      },
     ],
-    optimization: {
-        splitChunks: {
-            chunks: 'all', // Split chunks for better optimization
-        },
-    },
-    resolve: {
-        extensions: ['.js', '.css'], // Resolve JS and CSS file extensions
-    },
+  },
+  // Optimization settings for images can be added if needed
 };
